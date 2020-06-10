@@ -11,4 +11,4 @@ from Board import Board
 print("New Game!")
 
 gameBoard = Board
-gameBoard.newGame()
+gameBoard.newGame(Board)

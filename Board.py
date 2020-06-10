@@ -13,21 +13,43 @@ class Board:
               [' ',' ',' '],
               [' ',' ',' '],]
         
-        def newGame():
+        def newGame(self):
             print('1 | 2 | 3' )
             print('---------')
             print('4 | 5 | 6')
             print('---------')
             print('7 | 8 | 9')
             
+            player_choice = input("Choose X (first move) or O:")
+            
+            print(player_choice)
+            
+            winner = None
+            current_state = "In Progress"
+            
+            if player_choice == 'X' or player_choice == 'x':
+                current_player = 0
+            else:
+                current_player = 1
+                
+            while current_state == "In Progress":
+                if current_player == 0:
+                    move = int(input("Choose a tile (1 to 9): "))
+                    Board.play_move(self, self.game_state, players[current_player], move)
+                else:
+                    move = 3
+                    Board.play_move(self, self.game_state, players[current_player], move)
+                    
+                Board.print_board(self, self.game_state)
+            
         
-        def play_move(state, player, move_num):
+        def play_move(self, state, player, move_num):
             #Row column indexing to access positions in state
-            if state[int((move_num-1)/3)][(move_num-1)%3] == ' ': 
-                state[int((move_num-1)/3)][(move_num-1)%3] = player
+            if self.game_state[int((move_num-1)/3)][(move_num-1)%3] == ' ': 
+                self.game_state[int((move_num-1)/3)][(move_num-1)%3] = player
             else:
                 move_num = int(input("Position is not empty. Choose again: "))
-                Board.play_move(state, player, move_num) #hmm idk if I like this, might need to be cls or this or idk
+                Board.play_move(self, state, player, move_num) #hmm idk if I like this, might need to be cls or this or idk
                 
         def copy_game_state(state):
             new_state = [[' ',' ',' '],
@@ -73,12 +95,12 @@ class Board:
             
             return None, "In Progress"
         
-        def print_board(state, player):
-            print(str(state[0][0]) + ' | ' + str(state[0][1]) + ' | ' + str(state[0][2]))
+        def print_board(self, state):
+            print(str(self.game_state[0][0]) + ' | ' + str(self.game_state[0][1]) + ' | ' + str(self.game_state[0][2]))
             print('---------')
-            print(str(state[1][0]) + ' | ' + str(state[1][1]) + ' | ' + str(state[1][2]))
+            print(str(self.game_state[1][0]) + ' | ' + str(self.game_state[1][1]) + ' | ' + str(self.game_state[1][2]))
             print('---------')
-            print(str(state[2][0]) + ' | ' + str(state[2][1]) + ' | ' + str(state[2][2]))
+            print(str(self.game_state[2][0]) + ' | ' + str(self.game_state[2][1]) + ' | ' + str(self.game_state[2][2]))
             
             
         
