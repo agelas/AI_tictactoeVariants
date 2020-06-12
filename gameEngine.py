@@ -37,13 +37,13 @@ while current_state == "In Progress":
         gameBoard.play_move(gameBoard, gameBoard.game_state, players[current_player], move)
         winner = Board.check_winner(gameBoard, players[current_player])
     else:
-                    
-        #minmax = minimax_player(gameBoard)
-        #move = minmax.getBestMove(gameBoard, players[current_player])
-        randPlayer = random_player
+        iterBoard = gameBoard.interable_board(gameBoard)
+        minmax = minimax_player()
+        move = minmax.run_algorithm(iterBoard, players[current_player])
         
-        availables = gameBoard.find_available(gameBoard)
-        move = randPlayer.get_move(availables)
+        #randPlayer = random_player
+        #availables = gameBoard.find_available(gameBoard)
+        #move = randPlayer.get_move(availables)
         #move = 3;
         gameBoard.play_move(gameBoard, gameBoard.game_state, players[current_player], move)
         winner = Board.check_winner(gameBoard, players[current_player])

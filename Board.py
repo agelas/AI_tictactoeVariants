@@ -10,7 +10,7 @@ class Board:
     
         game_state = [[' ',' ',' '],
               [' ',' ',' '],
-              [' ',' ',' '],]
+              [' ',' ',' ']]
         
         def newGame(self):
             print('1 | 2 | 3' )
@@ -43,7 +43,7 @@ class Board:
         #Checks if either player has won
         def check_winner(self, player):
             
-            #Check horizontals
+            #Check combinations
             win_states = [
             [ self.game_state[0][0], self.game_state[0][1], self.game_state[0][2] ],
             [ self.game_state[1][0], self.game_state[1][1], self.game_state[1][2] ],
@@ -84,6 +84,9 @@ class Board:
             print(str(state[1][0]) + ' | ' + str(state[1][1]) + ' | ' + str(state[1][2]))
             print('---------')
             print(str(state[2][0]) + ' | ' + str(state[2][1]) + ' | ' + str(state[2][2]))
+            
+        def interable_board(self):
+            return self.game_state;
             
             
         
