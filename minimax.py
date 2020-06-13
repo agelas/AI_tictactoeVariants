@@ -27,6 +27,14 @@ class minimax_player:
             score = 0
             
         return score
+    
+    def parseBoard(self, AI_Tile, User_Tile):
+        for i in range(3):
+            for j in range(3):
+                if self.state[i][j] == AI_Tile:
+                    self.state[i][j] = 1
+                if self.state[i][j] == User_Tile:
+                    self.state[i][j] = -1
          
     def wins(self, state, player):
         
@@ -42,8 +50,8 @@ class minimax_player:
             ]
             
         if [player, player, player] in win_states:
-            print('HEY FOUND WINNER IN MINIMAX')
-            self.print_board()
+            #print('HEY FOUND WINNER IN MINIMAX')
+            #self.print_board()
             return True
         else:
             return False
@@ -117,7 +125,15 @@ class minimax_player:
     
     def run_algorithm(self, boardState, tile_choice):
         AI_tile = tile_choice
+        if AI_tile == 'X':
+            User_tile = 'O'
+        else:
+            User_tile = 'X'
+            
         self.state = boardState
+        self.parseBoard(AI_tile, User_tile)
+        
+        
         #print(' '.join(map(str, self.state)))
         moveChoice = self.make_move(AI_tile)
         return moveChoice

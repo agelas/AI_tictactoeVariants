@@ -46,11 +46,14 @@ while current_state == "In Progress":
         #move = randPlayer.get_move(availables)
         #move = 3;
         gameBoard.play_move(gameBoard, gameBoard.game_state, players[current_player], move)
+        Board.unparse(gameBoard.game_state, player_choice)
         winner = Board.check_winner(gameBoard, players[current_player])
-                    
+        
+    gameBoard.game_state = Board.unparse(gameBoard.game_state, player_choice)       
     Board.print_board(gameBoard.game_state)
                 
     if winner is not None:
         print(str(winner) + "won")
+        current_state = "Done"
     else:
         current_player = (current_player + 1)%2 #this is an ugly way of switching players

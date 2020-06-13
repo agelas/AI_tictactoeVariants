@@ -87,6 +87,22 @@ class Board:
             
         def interable_board(self):
             return self.game_state;
+        
+        def unparse(state, human_tile):
+            if human_tile == 'X':
+                AI_tile = 'O'
+            else:
+                AI_tile = 'X'
+                
+            for i in range(3):
+                for j in range(3):
+                    if state[i][j] == 1:
+                        state[i][j] = AI_tile
+                    if state[i][j] == -1:
+                        state[i][j] = human_tile
+            return state
+           
+                    
             
             
         
