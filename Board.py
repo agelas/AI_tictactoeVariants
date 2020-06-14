@@ -13,6 +13,14 @@ class Board:
               [' ',' ',' ']]
         
         def newGame(self):
+            '''
+            Prints the tiles and the numbers corresponding to them.
+
+            Returns
+            -------
+            None.
+
+            '''
             print('1 | 2 | 3' )
             print('---------')
             print('4 | 5 | 6')
@@ -22,14 +30,27 @@ class Board:
             
             
         def play_move(self, state, player, move_num):
+            '''
+            Places a player's corresponding tile on the selected position.
+
+            Parameters
+            ----------
+            state : The board instance to place pieces on.
+            player : The 'X' or 'O' to be placed.
+            move_num : The number of the tile we're placing the 'X'/'O' on.
+
+            Returns
+            -------
+            None.
+
+            '''
             #Row column indexing to access positions in state
             if self.game_state[int((move_num-1)/3)][(move_num-1)%3] == ' ': 
                 self.game_state[int((move_num-1)/3)][(move_num-1)%3] = player
             else:
                 move_num = int(input("Position is not empty. Choose again: "))
                 Board.play_move(self, state, player, move_num) 
-                #Rn after the second move you start moving for 'O' because you 
-                #trigger not empty basically
+                
                 
         def copy_game_state(state):
             new_state = [[' ',' ',' '],
@@ -40,8 +61,23 @@ class Board:
                     new_state[i][j] = state[i][j]
             return new_state
         
-        #Checks if either player has won
         def check_winner(self, player):
+            '''
+            Checks whether a player 'X' or 'O' has won by going through self.game_state
+            and seeing if there's a three in a row of 'X' or 'O' markers.
+
+            Parameters
+            ----------
+            player : The 'X' or 'O'.
+
+            Returns
+            -------
+            If a winner is found, it will return the player and "Done", the latter is a flag
+            for the game engine to exit out of game loop. 
+            
+            If no winners then function returns None, and "Draw" if no more moves are possible
+
+            '''
             
             #Check combinations
             win_states = [
@@ -65,11 +101,19 @@ class Board:
                     if self.game_state[i][j] is ' ':
                         draw_flag = 1 #If empty, moves still available
             if draw_flag is 0:
-                return None, "Draw" #If draw_flag still 0 
+                return None, "Draw" #If draw_flag still 0 then out of available tiles
             
             return None
         
         def find_available(self):
+            '''
+            Finds all available tiles in self.game_state
+
+            Returns
+            -------
+            available_tiles : A list of all remaining tiles.
+
+            '''
             available_tiles = []
             for i in range(3):
                 for j in range(3):
@@ -79,6 +123,9 @@ class Board:
             return available_tiles
         
         def print_board(state):
+            '''
+            Prints the board
+            '''
             print(str(state[0][0]) + ' | ' + str(state[0][1]) + ' | ' + str(state[0][2]))
             print('---------')
             print(str(state[1][0]) + ' | ' + str(state[1][1]) + ' | ' + str(state[1][2]))
@@ -86,9 +133,33 @@ class Board:
             print(str(state[2][0]) + ' | ' + str(state[2][1]) + ' | ' + str(state[2][2]))
             
         def interable_board(self):
+            '''
+            Gives the game engine an iterable game_state object that can be 
+            fiddled with. 
+
+            Returns
+            -------
+            The game_state list.
+
+            '''
             return self.game_state;
         
         def unparse(state, human_tile):
+            '''
+            Some of the AI players turn the board into a format that they need
+            in order to interpret it coorectly. This function is responsible for
+            taking those boards and turning it back into something with 'X'/'O'.
+
+            Parameters
+            ----------
+            state : The board.
+            human_tile : Whether player is the 'X' or 'O'
+
+            Returns
+            -------
+            state : The un-parsed board that is a list with 'X' or 'O' on the tiles
+
+            '''
             if human_tile == 'X':
                 AI_tile = 'O'
             else:
