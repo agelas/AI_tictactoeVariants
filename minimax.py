@@ -180,7 +180,7 @@ class minimax_player:
         ----------
         state : The current board instantiation.
         depth : How many moves deep the algorithm is. 
-        player : The 'X' or 'O' marker for the AI player
+        player : The '+1' (AI) or '-1' (opponent) marker for the player
 
         Returns
         -------
@@ -216,6 +216,34 @@ class minimax_player:
                     
         return best
     
+    def checkThree(self, player):
+        '''
+        checkThree ensures that minimax AI player never loses. Ie it ensures
+        that the AI will block any two in-a-rows.
+
+        Parameters
+        ----------
+        player : 
+            Opponent.
+
+        Returns
+        -------
+        int
+            Position that needs to be blocked, if none than -1.
+
+        '''
+        
+        for tile2 in self.empty_tiles():
+            position2 = tile2
+            self.state[int((position2-1)/3)][(position2-1)%3] = -player
+            #print('Checking ' + str(position2))
+            if self.wins(self.state, -player):
+                self.state[int((position2-1)/3)][(position2-1)%3] = ' ' 
+                return position2
+            self.state[int((position2-1)/3)][(position2-1)%3] = ' '
+        return -1
+        
+    
     #Not sure why tile_choice is a needed parameter
     def make_move(self, tile_choice):
         '''
@@ -249,6 +277,9 @@ class minimax_player:
         
         if depth == 9:
             aiMove = [5, 2] #center tile if board is empty
+        elif (self.checkThree(self.AI) != -1):
+            aiMove = self.checkThree(self.AI)
+            return aiMove
         else:
             aiMove = self.minimax(self.state, depth, self.AI)
             
