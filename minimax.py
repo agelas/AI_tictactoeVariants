@@ -67,6 +67,28 @@ class minimax_player:
                 if self.state[i][j] == User_Tile:
                     self.state[i][j] = -1
          
+    def unParseBoard(self, AI_Tile, User_Tile):
+        '''
+        Reverses the effects of parseBoard.
+        
+        Parameters
+        ----------
+        AI_Tile : The 'X' or 'O' that will replace 1's
+        User_Tile : The 'X' or 'O' that will replace -1's
+
+        Returns
+        -------
+        None.
+        
+        '''
+        for i in range(3):
+            for j in range(3):
+                if self.state[i][j] == 1:
+                    self.state[i][j] = AI_Tile
+                if self.state[i][j] == -1:
+                    self.state[i][j] = User_Tile
+                    
+                    
     def wins(self, state, player):
         '''
         Checks if either player has won in current board instance. 
@@ -125,7 +147,8 @@ class minimax_player:
         tiles = []
         for i in range(3):
             for j in range(3):
-                if self.state[i][j] is ' ':
+                #if self.state[i][j] is ' ':
+                if self.state[i][j] == ' ':
                     tiles.append(i*3+(j+1))
         return tiles
     
@@ -210,11 +233,19 @@ class minimax_player:
             minimax returns a list, with the first position a move number and the 
             second position a score used to evaluate moves. So aiMove[0] grabs
             the number (the recommended move) and returns that.
+            
+        todo:
+            Need to look at opponent's tiles to see if they can win on next move.
+            If so, then move to block.
 
         '''
         depth = len(self.empty_tiles())
         if depth == 0 or self.game_over(self.state):
             return
+
+        # Always grab the center square if we can...        
+        if 5 in self.empty_tiles():
+            return 5
         
         if depth == 9:
             aiMove = [5, 2] #center tile if board is empty
@@ -253,6 +284,8 @@ class minimax_player:
         
         #print(' '.join(map(str, self.state)))
         moveChoice = self.make_move(AI_tile)
+        self.unParseBoard(AI_tile, User_tile)
+
         return moveChoice
     
     def print_board(self):

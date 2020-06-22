@@ -26,12 +26,14 @@ class Board:
             print('4 | 5 | 6')
             print('---------')
             print('7 | 8 | 9')
+            print()
             
             
             
         def play_move(self, state, player, move_num):
             '''
             Places a player's corresponding tile on the selected position.
+            May be called recursivley if player attempts to occupy a cell that is not open.
 
             Parameters
             ----------
@@ -98,9 +100,11 @@ class Board:
             draw_flag = 0
             for i in range(3):
                 for j in range(3):
-                    if self.game_state[i][j] is ' ':
+                    #if self.game_state[i][j] is ' ':
+                    if self.game_state[i][j] == ' ':
                         draw_flag = 1 #If empty, moves still available
-            if draw_flag is 0:
+            #if draw_flag is 0:
+            if draw_flag == 0:
                 return None, "Draw" #If draw_flag still 0 then out of available tiles
             
             return None
@@ -131,6 +135,7 @@ class Board:
             print(str(state[1][0]) + ' | ' + str(state[1][1]) + ' | ' + str(state[1][2]))
             print('---------')
             print(str(state[2][0]) + ' | ' + str(state[2][1]) + ' | ' + str(state[2][2]))
+            print()
             
         def interable_board(self):
             '''
@@ -160,10 +165,14 @@ class Board:
             state : The un-parsed board that is a list with 'X' or 'O' on the tiles
 
             '''
-            if human_tile == 'X':
+            
+            #if human_tile == 'X':           
+            if human_tile == 'X' or human_tile == 'x':
                 AI_tile = 'O'
+                human_tile = 'X'
             else:
                 AI_tile = 'X'
+                human_tile = 'O'
                 
             for i in range(3):
                 for j in range(3):
