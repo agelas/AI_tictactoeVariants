@@ -23,6 +23,8 @@ class tabularQ_player:
         state = [[' ',' ',' '],
               [' ',' ',' '],
               [' ',' ',' ']]
+        tabularDictionary = {{}};
+        
         i = 0
         while(i < training_cycles):
         
@@ -31,6 +33,15 @@ class tabularQ_player:
             while(game_state == "In Progress"):
             
                 hashed_board = self.hashBoard(state)
+                #Add hashed_board to states list
+                
+                #If AI is X, choose random tile, add to moves_list
+                
+                #If AI is O, choose random tile, add to moves_list
+                
+                #Calculate quality starting with last state and move
+                
+            i+=1;
                 
         
         return #Not sure this function even returns, just fills in hash map
