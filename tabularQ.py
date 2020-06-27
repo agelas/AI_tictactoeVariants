@@ -12,17 +12,19 @@ class tabularQ_player:
     
     def hashBoard(self, state):
         
-        hashC = 0
+        hashmediary = ['n']
         
         for i in range(3):
             for j in range(3):
-                hashC *= 3
-                if(state[i][j] == ' '):
-                    hashemediary = 0
-                else:
-                    hashemediary = 1
-                hashC += hashemediary
-        return hashC
+                if (state[i][j] == ' '):
+                    hashmediary.append('n')
+                elif (state[i][j] == 'X'):
+                    hashmediary.append('X')
+                elif (state[i][j] == 'O'):
+                    hashmediary.append('O')
+        hashsequence = ''.join(hashmediary)
+        hashsequence = hashsequence.__hash__()
+        return hashsequence
     
     def trainingCycle(self, training_cycles, player):
         
@@ -90,6 +92,7 @@ class tabularQ_player:
               [' ',' ',' '],
               [' ',' ',' ']] #Hard reset lol
             print(states_list)
+            print(moves_list)
                 
         
         return 5 #Not sure this function even returns, just fills in hash map
