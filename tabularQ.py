@@ -10,25 +10,29 @@ import random
 class tabularQ_player:
     
     
-    def hashBoard(state):
+    def hashBoard(self, state):
         
         hashC = 0
         
-        for i in range(9):
-            hashC *= 3
-            hashC += state[i]
+        for i in range(3):
+            for j in range(3):
+                hashC *= 3
+                if(state[i][j] == ' '):
+                    hashemediary = 0
+                else:
+                    hashemediary = 1
+                hashC += hashemediary
         return hashC
     
     def trainingCycle(self, training_cycles, player):
         
         state = [[' ',' ',' '],
-              [' ',' ',' '],
-              [' ',' ',' ']]
-        tabularDictionary = {{}};
+                  [' ',' ',' '],
+                  [' ',' ',' ']]
         
         i = 0
         while(i < training_cycles):
-            
+            print('Training cycle ' + str(i))
             if player == 'X':
                 tiles = ['X', 'O']
             else:
@@ -45,47 +49,50 @@ class tabularQ_player:
                 
                 available_moves = self.empty_tiles(state)
                 length = len(available_moves)
-                randMove = random.randint(1, length)
+                rand = random.randint(1, length)
+                randMove = available_moves[rand - 1]
                 
                 if not self.game_over(state):
-                    self.play_move(state, 'X', randMove)
+                    state[int((randMove-1)/3)][(randMove-1)%3] = 'X'
                     
-                #If AI is X, add to states_list and moves_list
-                if player == 'X':
-                    states_list.append(hashed_board)
-                    moves_list.append(randMove)
-                
-                winner = self.check_winner(state, 'X')    
-           
+                winner = self.check_winner(state, 'X')
                 if winner is not None:
                     print(str(winner) + "won")
                     game_state = "Done"
-                
-                #Recalculate available_moves and randMove
+                    self.print_board(state)
+                    break #So we can't hit the second winner check if X wins
+                    
                 available_moves = self.empty_tiles(state)
                 length = len(available_moves)
-                randMove = random.randint(1, length)
+                rand = random.randint(1, length)
+                randMove = available_moves[rand - 1]
                 
                 if not self.game_over(state):
-                    self.play_move(state, 'O', randMove)
+                    state[int((randMove-1)/3)][(randMove-1)%3] = 'O'
                     
-                #If AI is O, add to states_list and moves_list
+                #If AI is X, add to states_list and moves_list
                 if player == 'O':
                     states_list.append(hashed_board)
                     moves_list.append(randMove)
-                    
-                winner = self.check_winner(state, 'O')
+                
+                winner = self.check_winner(state, 'O')   
                 if winner is not None:
                     print(str(winner) + "won")
                     game_state = "Done"
+                    self.print_board(state)
+                    
+            
                 
                 #Calculate quality starting with last state and move
                 
             i+=1
-            #Resetting board happens out here
+            state = [[' ',' ',' '],
+              [' ',' ',' '],
+              [' ',' ',' ']] #Hard reset lol
+            print(states_list)
                 
         
-        return #Not sure this function even returns, just fills in hash map
+        return 5 #Not sure this function even returns, just fills in hash map
     
     def check_winner(self, state, player):
         '''
@@ -124,7 +131,7 @@ class tabularQ_player:
         draw_flag = 0
         for i in range(3):
             for j in range(3):
-                if self.game_state[i][j] == ' ':
+                if state[i][j] == ' ':
                     draw_flag = 1 #If empty, moves still available
         if draw_flag == 0:
             return None, "Draw" #If draw_flag still 0 then out of available tiles
@@ -146,7 +153,7 @@ class tabularQ_player:
             True or false if a win is detected for either player designated by 'X' or 'O'.
 
         '''
-        return self.wins(state, 'X') or self.wins(state, 'O')
+        return self.check_winner(state, 'X') or self.check_winner(state, 'O')
     
     def play_move(self, state, player, move_num):
         '''
@@ -165,13 +172,10 @@ class tabularQ_player:
     
         '''
         #Row column indexing to access positions in state
-        if self.game_state[int((move_num-1)/3)][(move_num-1)%3] == ' ': 
-            self.game_state[int((move_num-1)/3)][(move_num-1)%3] = player
-        else:
-            move_num = int(input("Position is not empty. Choose again: "))
-            self.play_move(self, state, player, move_num)
+        if state[int((move_num-1)/3)][(move_num-1)%3] == ' ': 
+            state[int((move_num-1)/3)][(move_num-1)%3] = player
             
-    def empty_tiles(state):
+    def empty_tiles(self, state):
         '''
         Find available tiles in self.state.
         '''
@@ -202,7 +206,7 @@ class tabularQ_player:
         else:
             return False
         
-    def print_board(state):
+    def print_board(self, state):
             '''
             Prints the board
             '''
