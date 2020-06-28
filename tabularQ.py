@@ -42,6 +42,7 @@ class tabularQ_player:
                 
             states_list = []
             moves_list = []
+            win = 0 #this is for creating the moves dictionary
         
             game_state = "In Progress"
             
@@ -62,6 +63,7 @@ class tabularQ_player:
                     print(str(winner) + "won")
                     game_state = "Done"
                     self.print_board(state)
+                    win = -1
                     break #So we can't hit the second winner check if X wins
                     
                 available_moves = self.empty_tiles(state)
@@ -82,6 +84,7 @@ class tabularQ_player:
                     print(str(winner) + "won")
                     game_state = "Done"
                     self.print_board(state)
+                    win = 1
                     
             
                 
@@ -93,9 +96,25 @@ class tabularQ_player:
               [' ',' ',' ']] #Hard reset lol
             print(states_list)
             print(moves_list)
+            self.makeMoveDictionary(states_list, moves_list, win)
                 
         
         return 5 #Not sure this function even returns, just fills in hash map
+    
+    def makeMoveDictionary(self, hashList, moveList, lastScore):
+        
+        moveDictionary = dict()
+        
+        for i in (moveList):
+            if i == moveList[-1]:
+                moveDictionary[i] = lastScore
+            else:
+                moveDictionary[i] = 1
+                
+        hashMoveDictionary = dict(zip(hashList, moveDictionary.items()))
+        print(hashMoveDictionary)
+        
+        #return moveDictionary
     
     def check_winner(self, state, player):
         '''
