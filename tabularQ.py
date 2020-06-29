@@ -104,17 +104,32 @@ class tabularQ_player:
     def makeMoveDictionary(self, hashList, moveList, lastScore):
         
         moveDictionary = dict()
+        moveDictionaryIntermediate = []
         
         for i in (moveList):
             if i == moveList[-1]:
-                moveDictionary[i] = lastScore
+                #moveDictionary[i] = lastScore
+                dictEntry = {i: lastScore}
             else:
-                moveDictionary[i] = 1
+                #moveDictionary[i] = 1
+                dictEntry = {i: 1}
+            moveDictionaryIntermediate.append(dictEntry)
                 
-        hashMoveDictionary = dict(zip(hashList, moveDictionary.items()))
+        print(moveDictionaryIntermediate)
+        hashMoveDictionary = dict(zip(hashList, moveDictionaryIntermediate)) #moveDictionary.items() seems to make it a tuple
         print(hashMoveDictionary)
+        self.updateQvalues(hashMoveDictionary, moveList, hashList)
         
         #return moveDictionary
+        
+    def updateQvalues(self, hashMoveDictionary, moveList, hashList):
+        
+        for i in range(len(hashList)):
+            key1 = hashList[-(i+1)]
+            key2 = moveList[-(i+1)]
+            print(hashMoveDictionary[key1][key2])
+        
+       # return updatedDictionary
     
     def check_winner(self, state, player):
         '''
