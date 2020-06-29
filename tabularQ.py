@@ -63,7 +63,10 @@ class tabularQ_player:
                     print(str(winner) + "won")
                     game_state = "Done"
                     self.print_board(state)
-                    win = -1
+                    if winner[0] is None:
+                        win = 0
+                    else:
+                        win = -1
                     break #So we can't hit the second winner check if X wins
                     
                 available_moves = self.empty_tiles(state)
@@ -84,7 +87,10 @@ class tabularQ_player:
                     print(str(winner) + "won")
                     game_state = "Done"
                     self.print_board(state)
-                    win = 1
+                    if winner[0] is None:
+                        win = 0
+                    else:
+                        win = 1
                     
             
                 
@@ -94,8 +100,8 @@ class tabularQ_player:
             state = [[' ',' ',' '],
               [' ',' ',' '],
               [' ',' ',' ']] #Hard reset lol
-            print(states_list)
-            print(moves_list)
+            #print(states_list)
+            #print(moves_list)
             self.makeMoveDictionary(states_list, moves_list, win)
                 
         
@@ -104,7 +110,7 @@ class tabularQ_player:
     def makeMoveDictionary(self, hashList, moveList, lastScore):
         
         moveDictionary = dict()
-        moveDictionaryIntermediate = []
+        moveDictionaryIntermediate = [] #Of form [{move: Qscore},{move: Qscore}]
         
         for i in (moveList):
             if i == moveList[-1]:
@@ -115,19 +121,36 @@ class tabularQ_player:
                 dictEntry = {i: 1}
             moveDictionaryIntermediate.append(dictEntry)
                 
-        print(moveDictionaryIntermediate)
+        #print(moveDictionaryIntermediate)
         hashMoveDictionary = dict(zip(hashList, moveDictionaryIntermediate)) #moveDictionary.items() seems to make it a tuple
+        print("INITIAL:")
         print(hashMoveDictionary)
         self.updateQvalues(hashMoveDictionary, moveList, hashList)
         
         #return moveDictionary
         
     def updateQvalues(self, hashMoveDictionary, moveList, hashList):
+        alpha = 0.9 #learning rate
+        gamma = 0.95 #discount rate
         
         for i in range(len(hashList)):
-            key1 = hashList[-(i+1)]
-            key2 = moveList[-(i+1)]
-            print(hashMoveDictionary[key1][key2])
+            if i == 0:
+                print('skip')
+            else:
+                key1 = hashList[-(i+1)]
+                key2 = moveList[-(i+1)]
+                #print(hashMoveDictionary[key1][key2])
+                nextStateDictIndex = hashList[-i] #Index of nested dictionary (move: Q score) of next state
+                print(hashMoveDictionary[nextStateDictIndex])
+                nextStateDict = hashMoveDictionary[nextStateDictIndex]
+                #print(type(nextStateDict))
+                
+                maxNQKey = max(nextStateDict, key = nextStateDict.get) #This'll get you key with max value
+                maxNQ = nextStateDict[maxNQKey]
+                updatedQ = (1-alpha)*hashMoveDictionary[key1][key2]+(alpha*gamma*maxNQ)
+                hashMoveDictionary[key1][key2] = updatedQ
+                print("UPDATED:")
+                print(hashMoveDictionary)
         
        # return updatedDictionary
     

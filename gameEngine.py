@@ -44,7 +44,7 @@ while current_state == "In Progress":
         iterBoard = gameBoard.interable_board(gameBoard)
         
         tabQ = tabularQ_player()
-        tabQ.trainingCycle(5, 'O')
+        tabQ.trainingCycle(10, 'O')
         #minmax = minimax_player()
         #move = minmax.run_algorithm(iterBoard, players[current_player])
         
