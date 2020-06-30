@@ -109,7 +109,7 @@ class tabularQ_player:
                 print(Qtable)
                 print('NEW TO MERGE:')
                 print(newQtable)
-                Qtable.update(newQtable)
+                self.mergeQtables(Qtable, newQtable)
                 print("BIG TABLE:")
                 print(Qtable)
                 
@@ -176,17 +176,21 @@ class tabularQ_player:
                 
     def mergeQtables(self, masterQ, mergingQ):
         
-        for key in mergingQ:
-            
-            #Check if board state is in masterQ
-            if key in masterQ:
-                masterQ.update(mergingQ) #This is wrong but placeholder
+        for state, Qdict in mergingQ.items():
+            if state in masterQ: #Checking if board state is in master table, 
+                                #if it is, need to check if there are overlapping {move: Qscore} 
+                                #nested dictionaries
+                for key in Qdict: #Checking the nested dictionaries
+                    if key in masterQ[state]: #If there is an overlapping {move: QScore}, key = move
+                        masterQ[state][key] = max(masterQ[state][key], mergingQ[state][key]) #AI is optimistic, will go for larger Qscore
+                    else:
+                        masterQ[state][key] = mergingQ[state][key] #If that move isn't there, just add to master table
             else:
-                stateToAdd = mergingQ[key]
-                masterQ[key] = stateToAdd
-                    
+                stateToAdd = mergingQ[state]
+                masterQ[state] = stateToAdd #Add board state to master
         
-       
+        return masterQ
+                    
            
     
     def check_winner(self, state, player):
