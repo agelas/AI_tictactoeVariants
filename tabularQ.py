@@ -3,6 +3,9 @@
 Created on Wed Jun 17 22:40:11 2020
 
 @author: Mathias
+
+TODO: Make a function for updating movesDictionary after the first training cycle
+TODO: Increase discount factor the farther you are from end
 """
 import random
 
@@ -31,6 +34,8 @@ class tabularQ_player:
         state = [[' ',' ',' '],
                   [' ',' ',' '],
                   [' ',' ',' ']]
+        
+        Qtable = dict() #where the values are getting put.
         
         i = 0
         while(i < training_cycles):
@@ -95,6 +100,18 @@ class tabularQ_player:
             
                 
                 #Calculate quality starting with last state and move
+            
+            if i == 0:
+                Qtable = self.makeMoveDictionary(states_list, moves_list, win)
+            else:
+                newQtable = self.makeMoveDictionary(states_list, moves_list, win)
+                print('MASTER:')
+                print(Qtable)
+                print('NEW TO MERGE:')
+                print(newQtable)
+                Qtable.update(newQtable)
+                print("BIG TABLE:")
+                print(Qtable)
                 
             i+=1
             state = [[' ',' ',' '],
@@ -102,7 +119,7 @@ class tabularQ_player:
               [' ',' ',' ']] #Hard reset lol
             #print(states_list)
             #print(moves_list)
-            self.makeMoveDictionary(states_list, moves_list, win)
+            
                 
         
         return 5 #Not sure this function even returns, just fills in hash map
@@ -123,11 +140,11 @@ class tabularQ_player:
                 
         #print(moveDictionaryIntermediate)
         hashMoveDictionary = dict(zip(hashList, moveDictionaryIntermediate)) #moveDictionary.items() seems to make it a tuple
-        print("INITIAL:")
-        print(hashMoveDictionary)
+        #print("INITIAL:")
+        #print(hashMoveDictionary)
         self.updateQvalues(hashMoveDictionary, moveList, hashList)
         
-        #return moveDictionary
+        return hashMoveDictionary
         
     def updateQvalues(self, hashMoveDictionary, moveList, hashList):
         alpha = 0.9 #learning rate
@@ -142,17 +159,35 @@ class tabularQ_player:
                 #print(hashMoveDictionary[key1][key2])
                 nextStateDictIndex = hashList[-i] #Index of nested dictionary (move: Q score) of next state
                 print(hashMoveDictionary[nextStateDictIndex])
-                nextStateDict = hashMoveDictionary[nextStateDictIndex]
+                nextStateDict = hashMoveDictionary[nextStateDictIndex] #Getting {move:Qscore, move:Qscore}
                 #print(type(nextStateDict))
                 
                 maxNQKey = max(nextStateDict, key = nextStateDict.get) #This'll get you key with max value
-                maxNQ = nextStateDict[maxNQKey]
+                maxNQ = nextStateDict[maxNQKey] #Gets the actual value of highest Q score in next state
+                
+                #print("maxNQ is: " + str(maxNQ))
+                #print("Applied to: " + str(hashMoveDictionary[key1][key2]))
+                
                 updatedQ = (1-alpha)*hashMoveDictionary[key1][key2]+(alpha*gamma*maxNQ)
                 hashMoveDictionary[key1][key2] = updatedQ
-                print("UPDATED:")
-                print(hashMoveDictionary)
+                
+                #print("UPDATED:")
+                #print(hashMoveDictionary)
+                
+    def mergeQtables(self, masterQ, mergingQ):
         
-       # return updatedDictionary
+        for key in mergingQ:
+            
+            #Check if board state is in masterQ
+            if key in masterQ:
+                masterQ.update(mergingQ) #This is wrong but placeholder
+            else:
+                stateToAdd = mergingQ[key]
+                masterQ[key] = stateToAdd
+                    
+        
+       
+           
     
     def check_winner(self, state, player):
         '''
@@ -185,7 +220,6 @@ class tabularQ_player:
         ]
         
         if [player, player, player] in win_states:
-            print('HEY')
             return player, "Done"
         
         draw_flag = 0
