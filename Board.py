@@ -123,7 +123,7 @@ class Board:
                 for j in range(3):
                     if self.game_state[i][j] is ' ':
                         available_tiles.append(i*3+(j+1))
-            print(' '.join(map(str, available_tiles)))
+            #print(' '.join(map(str, available_tiles)))
             return available_tiles
         
         def print_board(state):
@@ -137,7 +137,7 @@ class Board:
             print(str(state[2][0]) + ' | ' + str(state[2][1]) + ' | ' + str(state[2][2]))
             print()
             
-        def interable_board(self):
+        def iterable_board(self):
             '''
             Gives the game engine an iterable game_state object that can be 
             fiddled with. 
