@@ -4,7 +4,6 @@ Created on Wed Jun 17 22:40:11 2020
 
 @author: Mathias
 
-TODO: Make a function for updating movesDictionary after the first training cycle
 TODO: Increase discount factor the farther you are from end
 """
 import random
@@ -39,7 +38,7 @@ class tabularQ_player:
         
         i = 0
         while(i < training_cycles):
-            print('Training cycle ' + str(i))
+            #print('Training cycle ' + str(i))
             if player == 'X':
                 tiles = ['X', 'O']
             else:
@@ -65,9 +64,9 @@ class tabularQ_player:
                     
                 winner = self.check_winner(state, 'X')
                 if winner is not None:
-                    print(str(winner) + "won")
+                    #print(str(winner) + "won")
                     game_state = "Done"
-                    self.print_board(state)
+                    #self.print_board(state)
                     if winner[0] is None:
                         win = 0
                     else:
@@ -89,9 +88,9 @@ class tabularQ_player:
                 
                 winner = self.check_winner(state, 'O')   
                 if winner is not None:
-                    print(str(winner) + "won")
+                    #print(str(winner) + "won")
                     game_state = "Done"
-                    self.print_board(state)
+                    #self.print_board(state)
                     if winner[0] is None:
                         win = 0
                     else:
@@ -105,13 +104,13 @@ class tabularQ_player:
                 Qtable = self.makeMoveDictionary(states_list, moves_list, win)
             else:
                 newQtable = self.makeMoveDictionary(states_list, moves_list, win)
-                print('MASTER:')
-                print(Qtable)
-                print('NEW TO MERGE:')
-                print(newQtable)
+                #print('MASTER:')
+                #print(Qtable)
+                #print('NEW TO MERGE:')
+                #print(newQtable)
                 self.mergeQtables(Qtable, newQtable)
-                print("BIG TABLE:")
-                print(Qtable)
+                #print("BIG TABLE:")
+                #print(Qtable)
                 
             i+=1
             state = [[' ',' ',' '],
@@ -122,7 +121,7 @@ class tabularQ_player:
             
                 
         
-        return 5 #Not sure this function even returns, just fills in hash map
+        return Qtable #Returns the filled in hashtable
     
     def makeMoveDictionary(self, hashList, moveList, lastScore):
         
@@ -152,13 +151,16 @@ class tabularQ_player:
         
         for i in range(len(hashList)):
             if i == 0:
-                print('skip')
+                #Do nothing
+                #print('skip')
+                continue
             else:
                 key1 = hashList[-(i+1)]
                 key2 = moveList[-(i+1)]
                 #print(hashMoveDictionary[key1][key2])
+                
                 nextStateDictIndex = hashList[-i] #Index of nested dictionary (move: Q score) of next state
-                print(hashMoveDictionary[nextStateDictIndex])
+                #print(hashMoveDictionary[nextStateDictIndex])
                 nextStateDict = hashMoveDictionary[nextStateDictIndex] #Getting {move:Qscore, move:Qscore}
                 #print(type(nextStateDict))
                 
@@ -168,7 +170,8 @@ class tabularQ_player:
                 #print("maxNQ is: " + str(maxNQ))
                 #print("Applied to: " + str(hashMoveDictionary[key1][key2]))
                 
-                updatedQ = (1-alpha)*hashMoveDictionary[key1][key2]+(alpha*gamma*maxNQ)
+                distFactor = len(hashList)-i-1 #How far current index is from end
+                updatedQ = (1-alpha)*hashMoveDictionary[key1][key2]+(alpha*gamma*distFactor*maxNQ)
                 hashMoveDictionary[key1][key2] = updatedQ
                 
                 #print("UPDATED:")
@@ -305,14 +308,31 @@ class tabularQ_player:
             return False
         
     def print_board(self, state):
-            '''
-            Prints the board
-            '''
-            print(str(state[0][0]) + ' | ' + str(state[0][1]) + ' | ' + str(state[0][2]))
-            print('---------')
-            print(str(state[1][0]) + ' | ' + str(state[1][1]) + ' | ' + str(state[1][2]))
-            print('---------')
-            print(str(state[2][0]) + ' | ' + str(state[2][1]) + ' | ' + str(state[2][2]))
-            print()
+        '''
+        Prints the board, for internal debugging use only
+        '''
+        print(str(state[0][0]) + ' | ' + str(state[0][1]) + ' | ' + str(state[0][2]))
+        print('---------')
+        print(str(state[1][0]) + ' | ' + str(state[1][1]) + ' | ' + str(state[1][2]))
+        print('---------')
+        print(str(state[2][0]) + ' | ' + str(state[2][1]) + ' | ' + str(state[2][2]))
+        print()
+        
+    def returnMove(self, trainingCycles, board):
+        
+        hashedBoard = self.hashBoard(board)
+        print('In tabular:')
+        self.print_board(board)
+        hashTable = self.trainingCycle(trainingCycles, 'O')
+        
+        if hashedBoard in hashTable:
+            print('Found in table!!!')
+            move = max(hashTable(hashedBoard))
+        else:
+            move = 2
+        
+        return move
+            
+        
     
     

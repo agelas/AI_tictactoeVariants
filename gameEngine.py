@@ -9,7 +9,7 @@ Created on Wed Jun 10 00:43:10 2020
 from Board import Board
 from minimax import minimax_player
 from tabularQ import tabularQ_player
-#from randomMover import random_player
+from randomMover import random_player
 
 print("New Game!")
 
@@ -41,10 +41,19 @@ while current_state == "In Progress":
         #gameBoard.play_move(gameBoard, gameBoard.game_state, players[current_player], move)
         #winner = Board.check_winner(gameBoard, players[current_player])
     else:
-        iterBoard = gameBoard.interable_board(gameBoard)
+        #iterBoard = gameBoard.iterable_board(gameBoard)
         
         tabQ = tabularQ_player()
-        tabQ.trainingCycle(10, 'O')
+        #tabQ.trainingCycle(200, 'O')
+        print('Going into tabular looks like: ')
+        Board.print_board(gameBoard.game_state)
+        move = tabQ.returnMove(3000, gameBoard.game_state)
+        print('tabq is: ' + str(move))
+        if move == 2:
+            randPlayer = random_player
+            availables = gameBoard.find_available(gameBoard)
+            move = randPlayer.get_move(availables)
+        
         #minmax = minimax_player()
         #move = minmax.run_algorithm(iterBoard, players[current_player])
         
