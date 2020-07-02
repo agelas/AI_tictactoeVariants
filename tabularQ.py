@@ -4,7 +4,8 @@ Created on Wed Jun 17 22:40:11 2020
 
 @author: Mathias
 
-TODO: Increase discount factor the farther you are from end
+TODO: Make sure hash is actually correct
+TODO: Be able to switch players
 """
 import random
 
@@ -53,7 +54,7 @@ class tabularQ_player:
             while(game_state == "In Progress"):
             
                 hashed_board = self.hashBoard(state)
-                
+               
                 available_moves = self.empty_tiles(state)
                 length = len(available_moves)
                 rand = random.randint(1, length)
@@ -61,6 +62,7 @@ class tabularQ_player:
                 
                 if not self.game_over(state):
                     state[int((randMove-1)/3)][(randMove-1)%3] = 'X'
+                    hashed_board = self.hashBoard(state)
                     
                 winner = self.check_winner(state, 'X')
                 if winner is not None:
@@ -81,7 +83,7 @@ class tabularQ_player:
                 if not self.game_over(state):
                     state[int((randMove-1)/3)][(randMove-1)%3] = 'O'
                     
-                #If AI is X, add to states_list and moves_list
+                #If AI is O??, add to states_list and moves_list
                 if player == 'O':
                     states_list.append(hashed_board)
                     moves_list.append(randMove)
@@ -321,13 +323,11 @@ class tabularQ_player:
     def returnMove(self, trainingCycles, board):
         
         hashedBoard = self.hashBoard(board)
-        print('In tabular:')
-        self.print_board(board)
         hashTable = self.trainingCycle(trainingCycles, 'O')
         
         if hashedBoard in hashTable:
             print('Found in table!!!')
-            move = max(hashTable(hashedBoard))
+            move = max(hashTable[hashedBoard])
         else:
             move = 2
         

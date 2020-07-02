@@ -94,7 +94,6 @@ class Board:
             ]
             
             if [player, player, player] in win_states:
-                print('HEY')
                 return player, "Done"
             
             draw_flag = 0

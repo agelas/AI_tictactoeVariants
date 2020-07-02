@@ -44,10 +44,7 @@ while current_state == "In Progress":
         #iterBoard = gameBoard.iterable_board(gameBoard)
         
         tabQ = tabularQ_player()
-        #tabQ.trainingCycle(200, 'O')
-        print('Going into tabular looks like: ')
-        Board.print_board(gameBoard.game_state)
-        move = tabQ.returnMove(3000, gameBoard.game_state)
+        move = tabQ.returnMove(4000, gameBoard.game_state)
         print('tabq is: ' + str(move))
         if move == 2:
             randPlayer = random_player
