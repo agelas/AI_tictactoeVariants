@@ -4,7 +4,6 @@ Created on Wed Jun 17 22:40:11 2020
 
 @author: Mathias
 
-TODO: Make sure hash is actually correct
 TODO: Be able to switch players
 """
 import random
@@ -30,6 +29,20 @@ class tabularQ_player:
         return hashsequence
     
     def trainingCycle(self, training_cycles, player):
+        '''
+        Responsible for running the training cycles of the tabularQ AI up to 
+        the amount of cycles specified by the player.
+
+        Parameters
+        ----------
+        training_cycles : Number of cycles to be trained on
+        player : Tile marker of AI
+
+        Returns
+        -------
+        The Q table that will be used for lookups. 
+
+        '''
         
         state = [[' ',' ',' '],
                   [' ',' ',' '],
@@ -106,13 +119,7 @@ class tabularQ_player:
                 Qtable = self.makeMoveDictionary(states_list, moves_list, win)
             else:
                 newQtable = self.makeMoveDictionary(states_list, moves_list, win)
-                #print('MASTER:')
-                #print(Qtable)
-                #print('NEW TO MERGE:')
-                #print(newQtable)
                 self.mergeQtables(Qtable, newQtable)
-                #print("BIG TABLE:")
-                #print(Qtable)
                 
             i+=1
             state = [[' ',' ',' '],
@@ -126,6 +133,21 @@ class tabularQ_player:
         return Qtable #Returns the filled in hashtable
     
     def makeMoveDictionary(self, hashList, moveList, lastScore):
+        '''
+        Creates the Q lookup table the AI uses to find {state: {move:Qscore}}
+        nested dictionary entries.
+
+        Parameters
+        ----------
+        hashList : List of hashed board states
+        moveList : List of moves made in training cycle
+        lastScore : Indicates if last board was a win, loss, or draw
+
+        Returns
+        -------
+        hashMoveDictionary : Nested dictionary of form {state: {move:Qscore}}
+
+        '''
         
         moveDictionary = dict()
         moveDictionaryIntermediate = [] #Of form [{move: Qscore},{move: Qscore}]
@@ -148,6 +170,20 @@ class tabularQ_player:
         return hashMoveDictionary
         
     def updateQvalues(self, hashMoveDictionary, moveList, hashList):
+        '''
+        Updates the Qvalues inside the nested {move:state} dictionary
+
+        Parameters
+        ----------
+        hashMoveDictionary : The master Q table that was already created.
+        moveList : The list of moves whose Q values need to be added.
+        hashList : The list of hashed board states.
+
+        Returns
+        -------
+        None.
+
+        '''
         alpha = 0.9 #learning rate
         gamma = 0.95 #discount rate
         
@@ -180,6 +216,21 @@ class tabularQ_player:
                 #print(hashMoveDictionary)
                 
     def mergeQtables(self, masterQ, mergingQ):
+        '''
+        Merges Q tables created inside trainingCycles() without overwriting
+        hashed board states.
+
+        Parameters
+        ----------
+        masterQ : The master Q table that will eventually be used by the AI.
+        mergingQ : The recently created Q table whose states need to be merged
+                   into the master
+
+        Returns
+        -------
+        masterQ : The merged Q table.
+
+        '''
         
         for state, Qdict in mergingQ.items():
             if state in masterQ: #Checking if board state is in master table, 
